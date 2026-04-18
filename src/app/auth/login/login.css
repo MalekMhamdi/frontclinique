@@ -1,0 +1,102 @@
+
+/* Background */
+.container {
+  height: 100vh;
+  background: url('/logo.jpg') 
+  no-repeat center  center/cover;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;}
+
+
+
+
+
+/* Overlay blur */
+
+
+.overlay {
+  position: fixed;
+  inset: 0; /* remplace width/height 100% */
+  background: rgba(10, 0, 40, 0.4);
+}
+
+/* Card */
+.login-card {
+  position: relative;
+  width: 350px;
+  padding: 30px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  color: white;
+}
+
+/* Title */
+.login-card h2 {
+  margin-bottom: 20px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.tabs .active {
+  background: #3e2af5;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+}
+
+/* Password field */
+.password-field {
+  position: relative;
+}
+
+.eye {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+}
+
+/* Button */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #3e2af5;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Link */
+.link {
+  margin-top: 15px;
+}
