@@ -1,3 +1,33 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a7f64;
+  padding: 15px 20px;
+  padding: 10px;
+  display: flex;
+  color: white;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.logo {
+  margin: 0;
+}
+
+.links a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+.links a.active {
+  border-bottom: 2px solid white;
+}
 body {
   background-image: url("/logo.jpg");
   background-repeat: no-repeat;

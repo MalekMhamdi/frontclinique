@@ -7,14 +7,16 @@
   <div class="login-card">
     <h2>Login</h2>
 
-    <div class="tabs">
-      <button class="active">Patient</button>
-      <button>Doctor</button>
-      <button>Admin</button>
-      <button>LabTech</button>
-    </div>
+  <div class="tabs">
+    <button (click)="role='patient'" [class.active]="role==='patient'">Patient</button>
+    <button (click)="role='doctor'" [class.active]="role==='doctor'">Doctor</button>
+    <button (click)="role='admin'" [class.active]="role==='admin'">Admin</button>
+    <button (click)="role='labtech'" [class.active]="role==='labtech'">LabTech</button>
+  </div>
 
-    <form>
+  
+
+    <form (ngSubmit)="onLogin()">
       <input type="email" placeholder="Email" />
 
       <div class="password-field">
@@ -22,7 +24,7 @@
         <span class="eye">👁</span>
       </div>
 
-      <button class="btn-login">Login</button>
+      <button class="btn-login" type="submit">Login</button>
     </form>
 
     <p class="link">

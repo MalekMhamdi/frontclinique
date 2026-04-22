@@ -1,0 +1,45 @@
+
+<div class="container">
+
+  <h2>👤 My Profile</h2>
+
+  <div class="card">
+
+    <!-- FORM -->
+    <div class="form">
+
+      <input placeholder="Full Name" [(ngModel)]="patient.name">
+
+      <input placeholder="Age" [(ngModel)]="patient.age">
+
+      <input placeholder="Phone" [(ngModel)]="patient.phone">
+
+      <input placeholder="Email" [(ngModel)]="patient.email">
+
+      <select [(ngModel)]="patient.gender">
+        <option value="">Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+
+    </div>
+
+    <!-- BUTTON SAVE -->
+    <button (click)="saveProfile()">
+      Save Profile
+    </button>
+
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+
+    <button 
+      [class.active]="activeTab === 'edit'"
+      (click)="openUpdateProfile()">
+      ✏️ Update Profile
+    </button>
+
+  </div>
+
+</div>

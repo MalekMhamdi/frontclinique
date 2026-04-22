@@ -1,0 +1,115 @@
+<div class="container">
+
+  <h2>📅 Book Your Appointment</h2>
+
+  <div class="layout">
+
+    <!-- LEFT SIDE -->
+    <div class="left">
+
+      <!-- DATE (MODIFIÉ : CALENDRIER) -->
+      <div class="card">
+        <h3>Select Date</h3>
+
+        <input 
+          type="date"
+          [(ngModel)]="selectedDate"
+          class="date-input">
+      </div>
+
+      <!-- PATIENT -->
+      <div class="card">
+        <h3>Patient Details</h3>
+
+        <div class="form">
+          <input placeholder="Full Name" [(ngModel)]="patient.name">
+          <input placeholder="Age" [(ngModel)]="patient.age">
+          <input placeholder="Phone" [(ngModel)]="patient.phone">
+
+          <select [(ngModel)]="patient.gender">
+            <option value="">Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+
+          <input placeholder="Email" [(ngModel)]="patient.email">
+        </div>
+      </div>
+
+      <!-- SPECIALITY + DOCTOR -->
+      <div class="card">
+        <h3>Appointment</h3>
+
+        <select 
+          [(ngModel)]="appointment.specialityId"
+          (change)="onSpecialityChange()">
+
+          <option value="">Select Speciality</option>
+
+          <option *ngFor="let s of specialities" [value]="s.id">
+            {{ s.name }}
+          </option>
+        </select>
+
+        <select [(ngModel)]="appointment.doctorId">
+          <option value="">Select Doctor</option>
+
+          <option *ngFor="let d of doctors" [value]="d.id">
+            {{ d.name }}
+          </option>
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right">
+
+      <!-- TIME -->
+      <div class="card">
+        <h3>Available Time Slots</h3>
+
+        <div class="times">
+          <button 
+            *ngFor="let t of times"
+            [class.active]="selectedTime === t"
+            (click)="selectTime(t)">
+            {{ t }}
+          </button>
+        </div>
+      </div>
+    <div class="card">
+  <h3>📅 My Appointments</h3>
+
+  <div *ngFor="let r of appointmentsList; let i = index">
+
+    <p>
+      <b>{{ r.patient.name }}</b> - {{ r.date }} - {{ r.time }}
+    </p>
+
+    <button (click)="editAppointment(i)">✏ Edit</button>
+    <button (click)="cancelAppointment(i)">❌ Cancel</button>
+
+  </div>
+</div>
+      <!-- SUMMARY -->
+      <div class="card summary">
+
+        <h3>Booking Summary</h3>
+
+        <p><strong>Doctor:</strong> {{ selectedDoctor?.name }}</p>
+        <p><strong>Speciality:</strong> {{ selectedSpeciality?.name }}</p>
+        <p><strong>Date:</strong> {{ selectedDate }}</p>
+        <p><strong>Time:</strong> {{ selectedTime }}</p>
+
+        <button class="confirm" (click)="confirm()">
+          Confirm Booking
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

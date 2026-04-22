@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -20,12 +21,18 @@ export class Register {
 
   confirmPassword: string = '';
 
+  constructor(private router: Router) {}
+
   onRegister() {
+     
     if (this.user.password !== this.confirmPassword) {
       alert('Passwords do not match');
       return;
     }
 
     console.log('User registered:', this.user);
+    alert('Registration successful');
+    // REDIRECTION VERS LOGIN
+    this.router.navigate(['/login']);
   }
 }

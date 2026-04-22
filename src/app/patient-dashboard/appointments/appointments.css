@@ -1,0 +1,113 @@
+
+.container {
+  padding: 20px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #eef2f7, #f8fafc);
+}
+
+h2 {
+  color: #0f766e;
+}
+
+/* LAYOUT (inchangé) */
+.layout {
+  display: flex;
+  gap: 20px;
+}
+
+.left, .right {
+  flex: 1;
+}
+
+/* CARD (inchangé structure + style clean) */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border: 1px solid #eef1f6;
+}
+
+/* DATE INPUT */
+.date-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #dbe2ea;
+  background: #f9fafb;
+}
+
+/* FORM (inchangé structure) */
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* INPUTS */
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #dbe2ea;
+  background: #f9fafb;
+}
+
+/* FOCUS COLOR PROFILE */
+input:focus, select:focus {
+  border-color: #0f766e;
+  outline: none;
+  background: white;
+}
+
+/* TIMES */
+.times {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.times button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #f1f5f9;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* ACTIVE TIME (PROFILE COLOR) */
+.times button.active {
+  background: #0f766e;
+  color: white;
+}
+
+/* SUMMARY */
+.summary {
+  background: #ecfdf5;
+}
+
+/* CONFIRM BUTTON */
+.confirm {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #0f766e;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* HOVER */
+.confirm:hover {
+  background: #0d5c55;
+}
+
+/* RESPONSIVE (inchangé) */
+@media (max-width: 900px) {
+  .layout {
+    flex-direction: column;
+  }
+}

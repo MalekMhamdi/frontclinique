@@ -1,0 +1,67 @@
+<div class="container">
+
+  <h2>👤 My Profile</h2>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button 
+      [class.active]="activeTab === 'view'"
+      (click)="activeTab = 'view'">
+      View Profile
+    </button>
+
+    <button 
+      [class.active]="activeTab === 'edit'"
+      (click)="activeTab = 'edit'">
+      Update Profile
+    </button>
+  </div>
+
+  <div class="card">
+
+    <!-- 🖼️ PHOTO (toujours visible) -->
+    <div class="photo-section">
+      <img 
+        [src]="patient.photo || 'https://via.placeholder.com/120'" 
+        class="profile-pic">
+
+      <!-- upload seulement en mode edit -->
+      <div *ngIf="activeTab === 'edit'">
+        <input type="file" (change)="onFileSelected($event)">
+      </div>
+    </div>
+
+    <!-- 👁️ VIEW -->
+    <div *ngIf="activeTab === 'view'">
+
+      <p><strong>Name:</strong> {{ patient.name }}</p>
+      <p><strong>Age:</strong> {{ patient.age }}</p>
+      <p><strong>Phone:</strong> {{ patient.phone }}</p>
+      <p><strong>Email:</strong> {{ patient.email }}</p>
+      <p><strong>Gender:</strong> {{ patient.gender }}</p>
+
+    </div>
+
+    <!-- ✏️ EDIT -->
+    <div *ngIf="activeTab === 'edit'" class="form">
+
+      <input placeholder="Full Name" [(ngModel)]="patient.name">
+      <input placeholder="Age" [(ngModel)]="patient.age">
+      <input placeholder="Phone" [(ngModel)]="patient.phone">
+      <input placeholder="Email" [(ngModel)]="patient.email">
+
+      <select [(ngModel)]="patient.gender">
+        <option value="">Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+
+      <button (click)="saveProfile()">
+        Save Changes
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
