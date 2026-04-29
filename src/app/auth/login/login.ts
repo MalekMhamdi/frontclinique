@@ -1,47 +1,73 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { AuthService, Role } from '../../shared/services/auth.service';
+
+interface RoleOption {
+  value:       Role;
+  label:       string;
+  icon:        string;
+  description: string;
+}
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: './login.css'
 })
 export class LoginComponent {
 
-  role: string = 'patient';
+  selectedRole = signal<Role>('patient');
+  email        = signal('');
+  password     = signal('');
+  showPwd      = signal(false);
+  loading      = signal(false);
+  error        = signal('');
 
-  constructor(private router: Router) {}
+  roles: RoleOption[] = [
+    { value: 'patient', label: 'Patient',  icon: '🧑‍⚕️', description: 'Access your health portal' },
+    { value: 'doctor',  label: 'Doctor',   icon: '👨‍⚕️', description: 'Manage your patients'      },
+    { value: 'admin',   label: 'Admin',    icon: '🛡️',  description: 'Manage the clinic'          },
+    { value: 'labtech', label: 'Lab Tech', icon: '🔬',  description: 'Manage lab results'          },
+  ];
 
-  onLogin() {
+  constructor(private authService: AuthService) {}
 
-    console.log("LOGIN CLICKED");
+  get activeRole(): RoleOption {
+    return this.roles.find(r => r.value === this.selectedRole())!;
+  }
 
-    // Simulation login (normalement backend ici)
+  selectRole(role: Role): void {
+    this.selectedRole.set(role);
+    this.error.set('');
+  }
 
-    switch (this.role) {
-      case 'patient':
-        this.router.navigate(['/patient']);
-        break;
+  togglePwd(): void { this.showPwd.update(v => !v); }
 
-      case 'doctor':
-        this.router.navigate(['/doctor']);
-        break;
+  async submit(): Promise<void> {
+    this.error.set('');
 
-      case 'admin':
-        this.router.navigate(['/admin']);
-        break;
+    if (!this.email() || !this.password()) {
+      this.error.set('Please fill in all fields.');
+      return;
+    }
 
-      case 'labtech':
-        this.router.navigate(['/labtech']);
-        break;
+    const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRx.test(this.email())) {
+      this.error.set('Please enter a valid email address.');
+      return;
+    }
 
-      default:
-        console.warn("Role inconnu");
-        break;
+    this.loading.set(true);
+    try {
+      await this.authService.login(this.email(), this.password(), this.selectedRole());
+    } catch (e) {
+      this.error.set('Invalid credentials. Please try again.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }

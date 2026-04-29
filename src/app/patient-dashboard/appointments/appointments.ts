@@ -1,126 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
+type Tab = 'upcoming' | 'past' | 'cancelled';
+
+interface Appointment {
+  id: string;
+  type: string;
+  doctor: string;
+  location: string;
+  date: Date;
+  time: string;
+  status: 'confirmed' | 'pending' | 'cancelled';
+}
 
 @Component({
   selector: 'app-appointments',
-  templateUrl: './appointments.html',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  styleUrls: ['./appointments.css']
+  imports: [CommonModule, RouterLink],
+  templateUrl: './appointments.html',
+  styleUrl: './appointments.css'
 })
 export class AppointmentsComponent {
 
-  // ======================
-  // DATE + TIME
-  // ======================
-  selectedDate: string = '';
-  selectedTime: string = '';
-  appointmentsList: any[] = [];
-  times = ['10:00', '11:00', '12:00', '14:00'];
+  activeTab = signal<Tab>('upcoming');
 
-  // ======================
-  // PATIENT
-  // ======================
-  patient: any = {
-    name: '',
-    age: '',
-    phone: '',
-    gender: '',
-    email: ''
-  };
+  appointments = signal<Appointment[]>([
+    {
+      id: '1',
+      type: 'General Consultation',
+      doctor: 'Dr. Bennett',
+      location: 'Room 3, Floor 1',
+      date: new Date(2026, 4, 1),
+      time: '09:30 AM',
+      status: 'confirmed'
+    },
+    {
+      id: '2',
+      type: 'Full Blood Panel',
+      doctor: 'Central Laboratory',
+      location: 'Ground Floor',
+      date: new Date(2026, 4, 8),
+      time: '07:00 AM',
+      status: 'pending'
+    },
+    {
+      id: '3',
+      type: 'Cardiology Consultation',
+      doctor: 'Dr. Taylor',
+      location: 'Room 7, Floor 2',
+      date: new Date(2026, 4, 15),
+      time: '02:00 PM',
+      status: 'confirmed'
+    },
+    {
+      id: '4',
+      type: 'Diabetes Follow-up',
+      doctor: 'Dr. Santos',
+      location: 'Room 2, Floor 1',
+      date: new Date(2026, 2, 14),
+      time: '11:00 AM',
+      status: 'confirmed'
+    }
+  ]);
 
-  // ======================
-  // SPECIALITY + DOCTORS
-  // ======================
-  specialities = [
-    { id: 1, name: 'Dermatologist' },
-    { id: 2, name: 'Cardiologist' }
-  ];
-
-  allDoctors = [
-    { id: 1, name: 'Dr. Ali', specialityId: 1 },
-    { id: 2, name: 'Dr. Sara', specialityId: 2 }
-  ];
-
-  doctors: any[] = [];
-
-  appointment: any = {
-    specialityId: '',
-    doctorId: ''
-  };
-
-  // ======================
-  // GETTERS (SUMMARY)
-  // ======================
-  get selectedDoctor() {
-    return this.allDoctors.find(d => d.id == this.appointment.doctorId);
+  get filtered(): Appointment[] {
+    const now = new Date();
+    switch (this.activeTab()) {
+      case 'upcoming':
+        return this.appointments().filter(a => a.status !== 'cancelled' && a.date >= now);
+      case 'past':
+        return this.appointments().filter(a => a.status !== 'cancelled' && a.date < now);
+      case 'cancelled':
+        return this.appointments().filter(a => a.status === 'cancelled');
+    }
   }
 
-  get selectedSpeciality() {
-    return this.specialities.find(s => s.id == this.appointment.specialityId);
+  setTab(tab: Tab): void { this.activeTab.set(tab); }
+
+  cancel(id: string): void {
+    if (confirm('Are you sure you want to cancel this appointment?')) {
+      this.appointments.update(list =>
+        list.map(a => a.id === id ? { ...a, status: 'cancelled' as const } : a)
+      );
+    }
   }
 
-  // ======================
-  // ACTIONS
-  // ======================
-
-  onSpecialityChange() {
-    this.doctors = this.allDoctors.filter(
-      d => d.specialityId == this.appointment.specialityId
-    );
-
-    // reset doctor when speciality changes
-    this.appointment.doctorId = '';
+  statusLabel(status: string): string {
+    return status === 'confirmed' ? 'Confirmed'
+         : status === 'pending'   ? 'Pending'
+         : 'Cancelled';
   }
-  editAppointment(index: number) {
-  const rdv = this.appointmentsList[index];
-
-  this.patient = rdv.patient;
-  this.selectedDate = rdv.date;
-  this.selectedTime = rdv.time;
-  this.appointment = rdv.appointment;
-
-  // supprimer ancien RDV pour le remplacer
-  this.appointmentsList.splice(index, 1);
-}
-
-  selectTime(time: string) {
-    this.selectedTime = time;
-  }
-  cancelAppointment(index: number) {
-  this.appointmentsList.splice(index, 1);
-}
-get upcomingAppointments() {
-  return this.appointmentsList.filter(rdv => {
-    return new Date(rdv.date) >= new Date();
-  });
-}
-get pastAppointments() {
-  return this.appointmentsList.filter(rdv => {
-    return new Date(rdv.date) < new Date();
-  });
-}
-
-  confirm() {
-
-  const newRdv = {
-    patient: this.patient,
-    appointment: this.appointment,
-    date: this.selectedDate,
-    time: this.selectedTime,
-    doctor: this.selectedDoctor,
-    speciality: this.selectedSpeciality
-  };
-
-  this.appointmentsList.push(newRdv);
-
-  console.log("✅ RDV enregistré :", newRdv);
-
-  // reset form
-  this.patient = {};
-  this.selectedDate = '';
-  this.selectedTime = '';
-  this.appointment = { specialityId: '', doctorId: '' };
-}
 }

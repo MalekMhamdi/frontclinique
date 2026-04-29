@@ -1,43 +1,66 @@
-
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+interface Patient {
+  firstName:  string;
+  lastName:   string;
+  birthDate:  string;
+  gender:     string;
+  bloodGroup: string;
+  cin:        string;
+  phone:      string;
+  email:      string;
+  address:    string;
+  insurance:  string;
+  emergency:  { name: string; relation: string; phone: string };
+}
 
 @Component({
   selector: 'app-profile',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './profile.html',
-  styleUrls: ['./profile.css']
+  styleUrl: './profile.css'
 })
 export class ProfileComponent {
 
-  activeTab: string = 'view';
+  editing = signal(false);
 
-  patient = {
-    name: 'Malek',
-    age: '20',
-    phone: '12345678',
-    email: 'test@gmail.com',
-    gender: 'Female',
-    photo: ''
-  };
+  patient = signal<Patient>({
+    firstName:  'John',
+    lastName:   'Doe',
+    birthDate:  'June 12, 1985',
+    gender:     'Male',
+    bloodGroup: 'O+',
+    cin:        '08 435 621',
+    phone:      '+1 (555) 456-7890',
+    email:      'john.doe@email.com',
+    address:    '123 Main Street, New York',
+    insurance:  'Blue Cross · #445-2021',
+    emergency: {
+      name:     'Jane Doe',
+      relation: 'Spouse',
+      phone:    '+1 (555) 123-4567'
+    }
+  });
 
-  // 👉 UPDATE PROFILE = reset form
-  
-openUpdateProfile() {
-  this.activeTab = 'edit';
+  draft = signal<Patient>({ ...this.patient() });
 
-  this.patient.name = '';
-  this.patient.age = '';
-  this.patient.phone = '';
-  this.patient.email = '';
-  this.patient.gender = '';
-  this.patient.photo = '';
-}
+  get initials(): string {
+    const p = this.patient();
+    return `${p.firstName[0]}${p.lastName[0]}`;
+  }
 
-  saveProfile() {
-    console.log("Profile saved", this.patient);
-    this.activeTab = 'view';
+  startEdit(): void {
+    this.draft.set({ ...this.patient(), emergency: { ...this.patient().emergency } });
+    this.editing.set(true);
+  }
+
+  cancelEdit(): void { this.editing.set(false); }
+
+  saveEdit(): void {
+    this.patient.set({ ...this.draft() });
+    this.editing.set(false);
   }
 }

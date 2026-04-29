@@ -1,115 +1,50 @@
-<div class="container">
+<!-- Tabs -->
+<div class="apt-tabs">
+  <button class="apt-tab" [class.active]="activeTab() === 'upcoming'" (click)="setTab('upcoming')">Upcoming</button>
+  <button class="apt-tab" [class.active]="activeTab() === 'past'"     (click)="setTab('past')">Past</button>
+  <button class="apt-tab" [class.active]="activeTab() === 'cancelled'" (click)="setTab('cancelled')">Cancelled</button>
+</div>
 
-  <h2>📅 Book Your Appointment</h2>
+<!-- Toolbar -->
+<div class="apt-toolbar">
+  <a class="apt-btn-primary" routerLink="../book-appointment">+ Book Appointment</a>
+</div>
 
-  <div class="layout">
+<!-- Empty state -->
+@if (filtered.length === 0) {
+  <div class="apt-empty">
+    <div class="apt-empty-icon">📅</div>
+    <div>No appointments in this category</div>
+  </div>
+}
 
-    <!-- LEFT SIDE -->
-    <div class="left">
+<!-- Cards -->
+@for (apt of filtered; track apt.id) {
+  <div class="apt-card">
 
-      <!-- DATE (MODIFIÉ : CALENDRIER) -->
-      <div class="card">
-        <h3>Select Date</h3>
-
-        <input 
-          type="date"
-          [(ngModel)]="selectedDate"
-          class="date-input">
-      </div>
-
-      <!-- PATIENT -->
-      <div class="card">
-        <h3>Patient Details</h3>
-
-        <div class="form">
-          <input placeholder="Full Name" [(ngModel)]="patient.name">
-          <input placeholder="Age" [(ngModel)]="patient.age">
-          <input placeholder="Phone" [(ngModel)]="patient.phone">
-
-          <select [(ngModel)]="patient.gender">
-            <option value="">Gender</option>
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-
-          <input placeholder="Email" [(ngModel)]="patient.email">
-        </div>
-      </div>
-
-      <!-- SPECIALITY + DOCTOR -->
-      <div class="card">
-        <h3>Appointment</h3>
-
-        <select 
-          [(ngModel)]="appointment.specialityId"
-          (change)="onSpecialityChange()">
-
-          <option value="">Select Speciality</option>
-
-          <option *ngFor="let s of specialities" [value]="s.id">
-            {{ s.name }}
-          </option>
-        </select>
-
-        <select [(ngModel)]="appointment.doctorId">
-          <option value="">Select Doctor</option>
-
-          <option *ngFor="let d of doctors" [value]="d.id">
-            {{ d.name }}
-          </option>
-        </select>
-
-      </div>
-
+    <div class="apt-date" [class.amber]="apt.status === 'pending'">
+      <div class="apt-month">{{ apt.date | date:'MMM' }}</div>
+      <div class="apt-day">{{ apt.date | date:'dd' }}</div>
+      <div class="apt-year">{{ apt.date | date:'yyyy' }}</div>
     </div>
 
-    <!-- RIGHT SIDE -->
-    <div class="right">
-
-      <!-- TIME -->
-      <div class="card">
-        <h3>Available Time Slots</h3>
-
-        <div class="times">
-          <button 
-            *ngFor="let t of times"
-            [class.active]="selectedTime === t"
-            (click)="selectTime(t)">
-            {{ t }}
-          </button>
-        </div>
+    <div class="apt-info">
+      <div class="apt-title">{{ apt.type }}</div>
+      <div class="apt-meta">
+        <span>🩺 {{ apt.doctor }}</span>
+        <span>🕐 {{ apt.time }}</span>
+        <span>📍 {{ apt.location }}</span>
       </div>
-    <div class="card">
-  <h3>📅 My Appointments</h3>
-
-  <div *ngFor="let r of appointmentsList; let i = index">
-
-    <p>
-      <b>{{ r.patient.name }}</b> - {{ r.date }} - {{ r.time }}
-    </p>
-
-    <button (click)="editAppointment(i)">✏ Edit</button>
-    <button (click)="cancelAppointment(i)">❌ Cancel</button>
-
-  </div>
-</div>
-      <!-- SUMMARY -->
-      <div class="card summary">
-
-        <h3>Booking Summary</h3>
-
-        <p><strong>Doctor:</strong> {{ selectedDoctor?.name }}</p>
-        <p><strong>Speciality:</strong> {{ selectedSpeciality?.name }}</p>
-        <p><strong>Date:</strong> {{ selectedDate }}</p>
-        <p><strong>Time:</strong> {{ selectedTime }}</p>
-
-        <button class="confirm" (click)="confirm()">
-          Confirm Booking
-        </button>
-
-      </div>
-
     </div>
 
+    <span class="apt-status" [ngClass]="apt.status">{{ statusLabel(apt.status) }}</span>
+
+    @if (apt.status !== 'cancelled') {
+      <div class="apt-actions">
+        <button class="apt-btn-outline">Reschedule</button>
+        <button class="apt-btn-outline danger" (click)="cancel(apt.id)">Cancel</button>
+      </div>
+    }
+
   </div>
-</div>
+}

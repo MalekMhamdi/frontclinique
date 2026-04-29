@@ -1,67 +1,71 @@
-<div class="container">
+<div class="pd-shell">
 
-  <h2>👤 My Profile</h2>
+  <!-- ═══ SIDEBAR ═══ -->
+  <nav class="pd-sidebar">
 
-  <!-- TABS -->
-  <div class="tabs">
-    <button 
-      [class.active]="activeTab === 'view'"
-      (click)="activeTab = 'view'">
-      View Profile
-    </button>
-
-    <button 
-      [class.active]="activeTab === 'edit'"
-      (click)="activeTab = 'edit'">
-      Update Profile
-    </button>
-  </div>
-
-  <div class="card">
-
-    <!-- 🖼️ PHOTO (toujours visible) -->
-    <div class="photo-section">
-      <img 
-        [src]="patient.photo || 'https://via.placeholder.com/120'" 
-        class="profile-pic">
-
-      <!-- upload seulement en mode edit -->
-      <div *ngIf="activeTab === 'edit'">
-        <input type="file" (change)="onFileSelected($event)">
+    <div class="pd-logo">
+      <div class="pd-logo-icon"><div class="pd-cross"></div></div>
+      <div>
+        <div class="pd-logo-text">MediClinic</div>
+        <div class="pd-logo-sub">Patient Portal</div>
       </div>
     </div>
 
-    <!-- 👁️ VIEW -->
-    <div *ngIf="activeTab === 'view'">
-
-      <p><strong>Name:</strong> {{ patient.name }}</p>
-      <p><strong>Age:</strong> {{ patient.age }}</p>
-      <p><strong>Phone:</strong> {{ patient.phone }}</p>
-      <p><strong>Email:</strong> {{ patient.email }}</p>
-      <p><strong>Gender:</strong> {{ patient.gender }}</p>
-
+    <div class="pd-user-card">
+      <div class="pd-avatar">{{ initials }}</div>
+      <div>
+        <div class="pd-user-name">{{ patient()?.name }}</div>
+        <div class="pd-user-role">Patient · #00421</div>
+      </div>
     </div>
 
-    <!-- ✏️ EDIT -->
-    <div *ngIf="activeTab === 'edit'" class="form">
+    <div class="pd-nav">
+      <div class="pd-nav-section">Navigation</div>
 
-      <input placeholder="Full Name" [(ngModel)]="patient.name">
-      <input placeholder="Age" [(ngModel)]="patient.age">
-      <input placeholder="Phone" [(ngModel)]="patient.phone">
-      <input placeholder="Email" [(ngModel)]="patient.email">
-
-      <select [(ngModel)]="patient.gender">
-        <option value="">Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-      </select>
-
-      <button (click)="saveProfile()">
-        Save Changes
-      </button>
-
+      <a class="pd-nav-item" routerLink="profile"        routerLinkActive="active">
+        <span class="pd-nav-icon">◉</span> My Profile
+      </a>
+      <a class="pd-nav-item" routerLink="appointments"   routerLinkActive="active">
+        <span class="pd-nav-icon">◷</span> My Appointments
+        <span class="pd-badge">3</span>
+      </a>
+      <a class="pd-nav-item" routerLink="medical-record" routerLinkActive="active">
+        <span class="pd-nav-icon">◻</span> Medical Record
+      </a>
+      <a class="pd-nav-item" routerLink="notifications"  routerLinkActive="active">
+        <span class="pd-nav-icon">◎</span> Notifications
+        @if (unreadCount() > 0) {
+          <span class="pd-badge">{{ unreadCount() }}</span>
+        }
+      </a>
     </div>
 
+    <div class="pd-sidebar-footer">
+      <div class="pd-logout" (click)="logout()">
+        <span>→</span> Sign Out
+      </div>
+    </div>
+
+  </nav>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="pd-main">
+    <div class="pd-topbar">
+      <div>
+        <div class="pd-topbar-title">Patient Portal</div>
+        <div class="pd-topbar-sub">{{ today }}</div>
+      </div>
+      <a class="pd-notif-btn" routerLink="notifications">
+        🔔
+        @if (unreadCount() > 0) {
+          <div class="pd-notif-dot"></div>
+        }
+      </a>
+    </div>
+
+    <div class="pd-content">
+      <router-outlet />
+    </div>
   </div>
 
 </div>

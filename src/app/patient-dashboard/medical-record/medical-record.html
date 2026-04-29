@@ -1,0 +1,65 @@
+<!-- Known Allergies -->
+<div class="mr-section">
+  <div class="mr-section-title">
+    Known Allergies
+    <div class="mr-line"></div>
+  </div>
+  <div class="mr-card">
+    <div class="mr-allergy-tags">
+      @for (a of allergies(); track a) {
+        <span class="mr-allergy-tag">{{ a }}</span>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Active Prescriptions -->
+<div class="mr-section">
+  <div class="mr-section-title">
+    Active Prescriptions
+    <div class="mr-line"></div>
+  </div>
+  <div class="mr-card">
+    <table class="mr-table">
+      <thead>
+        <tr>
+          <th>Medication</th>
+          <th>Dosage</th>
+          <th>Frequency</th>
+          <th>Prescribed by</th>
+          <th>Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (rx of prescriptions(); track rx.medication) {
+          <tr>
+            <td>{{ rx.medication }}</td>
+            <td>{{ rx.dosage }}</td>
+            <td>{{ rx.frequency }}</td>
+            <td>{{ rx.doctor }}</td>
+            <td>{{ rx.expires }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Documents & Results -->
+<div class="mr-section">
+  <div class="mr-section-title">
+    Documents & Results
+    <div class="mr-line"></div>
+  </div>
+
+  @for (doc of documents(); track doc.id) {
+    <div class="mr-doc-item">
+      <div class="mr-doc-icon {{ docClass(doc.type) }}">{{ docEmoji(doc.type) }}</div>
+      <div class="mr-doc-info">
+        <div class="mr-doc-title">{{ doc.title }}</div>
+        <div class="mr-doc-meta">{{ doc.doctor }} · {{ doc.date }}</div>
+      </div>
+      <button class="mr-doc-dl" (click)="download(doc.title)">↓</button>
+    </div>
+  }
+</div>
